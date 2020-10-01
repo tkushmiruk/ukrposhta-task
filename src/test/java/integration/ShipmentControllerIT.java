@@ -1,7 +1,9 @@
 package integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.opinta.dto.ParcelDto;
 import com.opinta.dto.ShipmentDto;
+import com.opinta.entity.Parcel;
 import com.opinta.entity.Shipment;
 import com.opinta.mapper.ShipmentMapper;
 import com.opinta.service.ShipmentService;
@@ -12,6 +14,9 @@ import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import integration.helper.TestHelper;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.when;
@@ -86,7 +91,7 @@ public class ShipmentControllerIT extends BaseControllerIT {
                         path("id");
 
         // check created data
-        Shipment createdShipment = shipmentService.getEntityById(newShipmentId);
+        Shipment createdShipment = testHelper.getShipment(newShipmentId);
         ObjectMapper mapper = new ObjectMapper();
         String actualJson = mapper.writeValueAsString(shipmentMapper.toDto(createdShipment));
 
@@ -113,8 +118,11 @@ public class ShipmentControllerIT extends BaseControllerIT {
         then().
                 statusCode(SC_OK);
 
-        // check updated data
-        ShipmentDto shipmentDto = shipmentMapper.toDto(shipmentService.getEntityById(shipmentId));
+        Shipment updatedShipment = testHelper.getShipment(shipmentId);
+
+       // check updated data
+        ShipmentDto shipmentDto = shipmentMapper.toDto(updatedShipment);
+
         ObjectMapper mapper = new ObjectMapper();
         String actualJson = mapper.writeValueAsString(shipmentDto);
 

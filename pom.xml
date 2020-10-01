@@ -9,7 +9,7 @@
     <name>Test Task</name>
     <url>http://maven.apache.org</url>
     <properties>
-        <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
         <maven-war-plugin.version>3.0.0</maven-war-plugin.version>
         <jdk.version>1.8</jdk.version>
         <springframework.version>4.3.0.RELEASE</springframework.version>
@@ -17,7 +17,7 @@
         <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
         <org.mapstruct.version>1.2.0.Beta1</org.mapstruct.version>
-        <org.projectlombok.version>1.16.14</org.projectlombok.version>
+        <org.projectlombok.version>1.18.12</org.projectlombok.version>
         <rest-assured.version>3.0.2</rest-assured.version>
         <junit.version>4.12</junit.version>
         <hsqldb.version>2.3.2</hsqldb.version>
@@ -42,6 +42,12 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>3.0.1</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
         </dependency>
         <!-- Spring ORM -->
         <dependency>
@@ -168,6 +174,13 @@
             <artifactId>hsqldb</artifactId>
             <version>${hsqldb.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.sevntu-checkstyle</groupId>
+            <artifactId>sevntu-checkstyle-idea-extension</artifactId>
+            <version>1.23.1</version>
+            <scope>system</scope>
+            <systemPath>/Users/roman/IdeaProjects/test_task_20170427/src/main/resources/checkstyle/sevntu-checkstyle-idea-extension-1.23.1.jar</systemPath>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -209,7 +222,10 @@
                     <configuration>
                         <source>${jdk.version}</source>
                         <target>${jdk.version}</target>
+
                     </configuration>
+
+
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -218,6 +234,14 @@
                     <configuration>
                         <failOnMissingWebXml>false</failOnMissingWebXml>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <configuration>
+                        <configLocation>/Users/roman/IdeaProjects/test_task_20170427/src/main/resources/checkstyle/sevntu-checkstyle-default-configuration.xml</configLocation>
+                    </configuration>
+                    <version>2.8</version>
                 </plugin>
                 <!-- embedded Jetty server, for testing -->
                 <plugin>

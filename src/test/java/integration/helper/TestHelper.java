@@ -5,13 +5,18 @@ import com.opinta.service.*;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
+import org.hibernate.Hibernate;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
 
 @Component
 public class TestHelper {
@@ -40,7 +45,9 @@ public class TestHelper {
 
     public Shipment createShipment() {
         Shipment shipment = new Shipment(createClient(), createClient(),
-                DeliveryType.D2D, 1.0F, 1.0F, new BigDecimal(200), new BigDecimal(30), new BigDecimal(35.2));
+                DeliveryType.D2D, new BigDecimal(30), new BigDecimal(35.2),
+                Collections.singletonList(new Parcel(1.0F, 1.0F, new BigDecimal(200),
+                        Collections.singletonList(new ParcelItem("bag", 5, 1.0F, new BigDecimal(40))))));
         return shipmentService.saveEntity(shipment);
     }
 
@@ -65,6 +72,14 @@ public class TestHelper {
         Address address = new Address("00001", "Ternopil", "Monastiriska",
                 "Monastiriska", "Sadova", "51", "");
         return addressService.saveEntity(address);
+    }
+
+    @Transactional
+    public Shipment getShipment(long id) {
+        Shipment shipment = shipmentService.getEntityById(id);
+        Hibernate.initialize(shipment.getParcels());
+        shipment.getParcels().forEach(parcel -> Hibernate.initialize(parcel.getParcelItems()));
+        return shipment;
     }
 
     public Counterparty createCounterparty() {
